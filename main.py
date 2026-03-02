@@ -20,7 +20,7 @@ class GrayScottWindow(mglw.WindowConfig):
         super().__init__(**kwargs)
         
         # Create simulation (512x512 resolution)
-        self.simulation = GrayScottSimulation(width=512, height=512)
+        self.simulation = GrayScottSimulation(width=256, height=256)
         
         # Create renderer
         self.renderer = GrayScottRenderer(

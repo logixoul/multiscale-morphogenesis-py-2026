@@ -14,8 +14,8 @@ class GrayScottSimulation:
         # Gray-Scott parameters
         self.f = 0.055  # feed rate
         self.k = 0.062  # kill rate
-        self.dt = 0.4   # time step (reduced from 1.0 for stability)
-        self.steps_per_frame = 20
+        self.dt = 1.0   # time step (reduced from 1.0 for stability)
+        self.steps_per_frame = 4  # Number of simulation steps per frame
         
         # Diffusion rates
         self.Du = 0.2
