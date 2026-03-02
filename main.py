@@ -18,7 +18,7 @@ class GrayScottWindow(mglw.WindowConfig):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         
-        self.simulation = GrayScottSimulation(width=256, height=256)
+        self.simulation = GrayScottSimulation(width=128, height=128)
         
         self.renderer = GrayScottRenderer(
             self.ctx, 

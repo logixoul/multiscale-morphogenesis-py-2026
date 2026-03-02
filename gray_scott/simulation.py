@@ -14,7 +14,7 @@ class GrayScottSimulation:
         # Gray-Scott parameters
         self.f = 0.055  # feed rate
         self.k = 0.062  # kill rate
-        self.dt = 1.0   # time step (reduced from 1.0 for stability)
+        self.dt = 1.0   # time step
         self.steps_per_frame = 4  # Number of simulation steps per frame
         
         # Diffusion rates
@@ -79,12 +79,6 @@ class GrayScottSimulation:
         up = af.shift(arr, 0, 1)
         down = af.shift(arr, 0, -1)
         
-        # Diagonals
-        up_left = af.shift(arr, 1, 1)
-        up_right = af.shift(arr, -1, 1)
-        down_left = af.shift(arr, 1, -1)
-        down_right = af.shift(arr, -1, -1)
-        
         # Center weight: -4, neighbors: 1 (standard 5-point stencil + 4 diagonals)
         # Using simplified 5-point stencil for better performance
         laplacian = (left + right + up + down - 4 * arr)
@@ -114,13 +108,6 @@ class GrayScottSimulation:
         # Clamp values to prevent instability
         self.U = af.clamp(self.U, 0.0, 1.0)
         self.V = af.clamp(self.V, 0.0, 1.0)
-        
-        # Additional safety: force values that are too extreme to reasonable bounds
-        # This catches any numerical overshoot
-        self.U = af.select(self.U < -0.5, 0.0, self.U)
-        self.U = af.select(self.U > 1.5, 1.0, self.U)
-        self.V = af.select(self.V < -0.5, 0.0, self.V)
-        self.V = af.select(self.V > 1.5, 1.0, self.V)
     
     def update(self):
         """Run multiple simulation steps per frame"""
