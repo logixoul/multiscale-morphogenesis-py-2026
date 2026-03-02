@@ -1,0 +1,4 @@
+arrayfire
+moderngl
+moderngl-window
+numpy
