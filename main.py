@@ -39,7 +39,7 @@ class GrayScottWindow(mglw.WindowConfig):
         if self.mouse_down:
             # Convert screen coordinates to normalized (0-1)
             x = self.mouse_pos[0] / self.window_size[0]
-            y = 1.0 - self.mouse_pos[1] / self.window_size[1]  # Flip Y
+            y = 1.0 - self.mouse_pos[1] / self.window_size[1]  # Flip Y for texture coords
             self.simulation.add_chemical(x, y, radius=15)
         
         # Update simulation
@@ -58,7 +58,7 @@ class GrayScottWindow(mglw.WindowConfig):
             self.mouse_pos = (x, y)
             # Add initial chemical on click
             norm_x = x / self.window_size[0]
-            norm_y = 1.0 - y / self.window_size[1]
+            norm_y = 1.0 - y / self.window_size[1]  # Flip Y for texture coords
             self.simulation.add_chemical(norm_x, norm_y, radius=15)
     
     def on_mouse_release_event(self, x, y, button):

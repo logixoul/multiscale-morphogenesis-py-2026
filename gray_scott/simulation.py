@@ -130,8 +130,9 @@ class GrayScottSimulation:
     def add_chemical(self, x, y, radius=10):
         """Add chemicals at the specified position"""
         # Convert to integer coordinates
-        cx = int(x * self.width)
-        cy = int(y * self.height)
+        # Note: swap x and y to match arrayfire's column-major storage
+        cy = int(x * self.width)
+        cx = int(y * self.height)
         
         # Clamp to valid range
         cx = max(0, min(self.width - 1, cx))
