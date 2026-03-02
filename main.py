@@ -5,8 +5,10 @@ Main entry point using moderngl-window
 
 import moderngl_window as mglw
 import numpy as np
+from imgui_bundle import imgui
 
 from gray_scott import GrayScottSimulation, GrayScottRenderer
+
 
 class GrayScottWindow(mglw.WindowConfig):
     gl_version = (3, 3)
@@ -29,6 +31,16 @@ class GrayScottWindow(mglw.WindowConfig):
         # Track mouse state
         self.mouse_down = False
         self.mouse_pos = (0, 0)
+        
+        # Create imgui context
+        imgui.create_context()
+        
+        # Configure imgui IO
+        io = imgui.get_io()
+        io.display_size = self.window_size
+        
+        # Initialize OpenGL3 renderer (this builds the font atlas)
+        imgui.backends.opengl3_init("#version 330")
     
     def on_render(self, time, frame_time):
         # Handle mouse input
@@ -43,6 +55,39 @@ class GrayScottWindow(mglw.WindowConfig):
         texture_data = self.simulation.get_texture_array()
         
         self.renderer.render(texture_data)
+        
+        # Render imgui
+        self._render_gui()
+    
+    def _render_gui(self):
+        """Render the imgui configuration window"""
+        imgui.backends.opengl3_new_frame()
+        imgui.new_frame()
+        
+        imgui.begin("Gray-Scott Parameters")
+        
+        # Feed rate slider
+        changed, self.simulation.f = imgui.slider_float("Feed Rate (f)", self.simulation.f, 0.0, 0.1)
+        
+        # Kill rate slider
+        changed, self.simulation.k = imgui.slider_float("Kill Rate (k)", self.simulation.k, 0.0, 0.1)
+        
+        # Time step slider
+        changed, self.simulation.dt = imgui.slider_float("Time Step (dt)", self.simulation.dt, 0.1, 2.0)
+        
+        # Steps per frame slider
+        changed, self.simulation.steps_per_frame = imgui.slider_int("Steps per Frame", self.simulation.steps_per_frame, 1, 20)
+        
+        # Diffusion rate U slider
+        changed, self.simulation.Du = imgui.slider_float("Diffusion U (Du)", self.simulation.Du, 0.01, 0.5)
+        
+        # Diffusion rate V slider
+        changed, self.simulation.Dv = imgui.slider_float("Diffusion V (Dv)", self.simulation.Dv, 0.01, 0.5)
+        
+        imgui.end()
+        
+        imgui.render()
+        imgui.backends.opengl3_render_draw_data(imgui.get_draw_data())
     
     def on_mouse_press_event(self, x, y, button):
         if button == self.wnd.mouse.left:

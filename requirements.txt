@@ -2,3 +2,4 @@ arrayfire
 moderngl
 moderngl-window
 numpy
+imgui-bundle
