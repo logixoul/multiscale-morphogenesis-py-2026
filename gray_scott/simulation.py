@@ -108,11 +108,27 @@ class GrayScottSimulation:
         # Clamp values to prevent instability
         self.U = af.clamp(self.U, 0.0, 1.0)
         self.V = af.clamp(self.V, 0.0, 1.0)
+
+    def enhance_curvature(self, arr):
+        """Enhance curvature to create sharper patterns"""
+        # Compute second derivatives
+        dxx = af.shift(arr, 1, 0) - 2 * arr + af.shift(arr, -1, 0)
+        dyy = af.shift(arr, 0, 1) - 2 * arr + af.shift(arr, 0, -1)
+        
+        # Curvature enhancement factor
+        curvature = dxx + dyy
+        
+        # Enhance curvature (simple approach: add a fraction of curvature back to the array)
+        enhanced = arr + 0.01 * curvature
+        
+        # Clamp values to prevent instability
+        return af.clamp(enhanced, 0.0, 1.0)
     
     def update(self):
         """Run multiple simulation steps per frame"""
         for _ in range(self.steps_per_frame):
             self.step()
+        self.V = self.enhance_curvature(self.V)
     
     def add_chemical(self, x, y, radius=10):
         """Add chemicals at the specified position"""
