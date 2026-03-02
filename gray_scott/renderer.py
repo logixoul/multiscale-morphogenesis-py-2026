@@ -64,6 +64,8 @@ class GrayScottRenderer:
         
         void main() {
             float v = texture(u_texture, v_uv).r;
+            float fw = fwidth(v);
+            v = smoothstep(0.25 - fw * 0.5, 0.25 + fw * 0.5, v); // Anti-aliasing
             vec3 color = color_map(v);
             f_color = vec4(color, 1.0);
         }
